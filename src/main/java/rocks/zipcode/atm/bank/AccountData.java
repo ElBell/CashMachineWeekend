@@ -8,19 +8,16 @@ public final class AccountData {
     private final int id;
     private final String name;
     private final String email;
+    private final float balance;
 
-    private final int balance;
-
-    AccountData(int id, String name, String email, int balance) {
+    public AccountData(int id, String name, String email, float balance) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.balance = balance;
     }
 
-    public int getId() {
-        return id;
-    }
+    public int getId() {return id;}
 
     public String getName() {
         return name;
@@ -30,9 +27,10 @@ public final class AccountData {
         return email;
     }
 
-    public int getBalance() {
+    public float getBalance() {
         return balance;
     }
+
 
     @Override
     public String toString() {
