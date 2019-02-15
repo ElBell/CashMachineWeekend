@@ -60,20 +60,20 @@ public class CashMachine {
         return accountData != null ? accountData.toString() : "Try account 1000 or 2000 and click submit.";
     }
 
-    public String getAcountName() {
-        return accountData != null ? accountData.getName() : "No such name";
+    public String getAccountName() {
+        return accountData != null ? accountData.getName() : "Please select account";
     }
 
-    public String getAcountID() {
-        return accountData != null ? Integer.toString(accountData.getId()) : "No such ID";
+    public String getAccountID() {
+        return accountData != null ? Integer.toString(accountData.getId()) : "Please select account";
     }
 
-    public String getAcountEmail() {
-        return accountData != null ? accountData.getEmail() : "No such email";
+    public String getAccountEmail() {
+        return accountData != null ? accountData.getEmail() : "Please select account";
     }
 
-    public float getAcountBalance() {
-        return accountData != null ? accountData.getBalance() : null;
+    public float getAccountBalance() {
+        return accountData != null ? accountData.getBalance() : 0f;
     }
 
 
