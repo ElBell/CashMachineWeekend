@@ -23,10 +23,10 @@ public class Bank {
         numberOfAccounts ++;
         if(premium) {
             accounts.put(numberOfAccounts, new BasicAccount(new AccountData(
-                    numberOfAccounts, name, email, balance)));
+                    numberOfAccounts, name, email, balance, false)));
         } else {
             accounts.put(numberOfAccounts, new PremiumAccount(new AccountData(
-                    numberOfAccounts, name, email, balance)));
+                    numberOfAccounts, name, email, balance, true)));
         }
     }
 
@@ -65,4 +65,6 @@ public class Bank {
     public int getNumberOfAccounts() {
         return numberOfAccounts;
     }
+
+
 }

@@ -11,9 +11,10 @@ public class TestAccountData {
         String name = "nameThis";
         String email = "emailThis";
         float balance = 60;
+        boolean premium = false;
 
         //When
-        AccountData newAccountData = new AccountData(id, name, email, balance);
+        AccountData newAccountData = new AccountData(id, name, email, balance, premium);
 
         //Then
         int actualId = newAccountData.getId();
@@ -25,6 +26,7 @@ public class TestAccountData {
         Assert.assertEquals(name, actualName);
         Assert.assertEquals(email, actualEmail);
         Assert.assertEquals(balance, actualBalance, 0.01f);
+        Assert.assertFalse(premium);
     }
 
     @Test
@@ -34,9 +36,10 @@ public class TestAccountData {
         String name = "otherName";
         String email = "otherEmail";
         float balance = 60000;
+        boolean premium = true;
 
         //When
-        AccountData newAccountData = new AccountData(id, name, email, balance);
+        AccountData newAccountData = new AccountData(id, name, email, balance, premium);
 
         //Then
         int actualId = newAccountData.getId();
@@ -48,6 +51,7 @@ public class TestAccountData {
         Assert.assertEquals(name, actualName);
         Assert.assertEquals(email, actualEmail);
         Assert.assertEquals(balance, actualBalance, 0.01f);
+        Assert.assertTrue(premium);
     }
 
 }

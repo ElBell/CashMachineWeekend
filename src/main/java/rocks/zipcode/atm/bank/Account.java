@@ -19,6 +19,8 @@ public abstract class Account {
         updateBalance(getBalance() + amount);
     }
 
+    public boolean isPremium() { return false; }
+
     public boolean withdraw(float amount) {
         if (canWithdraw(amount)) {
             updateBalance(getBalance() - amount);
@@ -38,6 +40,6 @@ public abstract class Account {
 
     private void updateBalance(float newBalance) {
         accountData = new AccountData(accountData.getId(), accountData.getName(), accountData.getEmail(),
-                newBalance);
+                newBalance, accountData.isPremium());
     }
 }

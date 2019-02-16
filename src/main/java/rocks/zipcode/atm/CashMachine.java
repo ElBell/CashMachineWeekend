@@ -1,5 +1,6 @@
 package rocks.zipcode.atm;
 
+import rocks.zipcode.atm.bank.Account;
 import rocks.zipcode.atm.bank.AccountData;
 import rocks.zipcode.atm.bank.Bank;
 
@@ -76,9 +77,13 @@ public class CashMachine {
         return accountData != null ? accountData.getBalance() : 0f;
     }
 
+
     public boolean hasAccount(int account) {
         return bank.getAccountIds().contains(account);
     }
+
+    public boolean isPremium() { return accountData != null && accountData.isPremium(); }
+
 
 
     private <T> void tryCall(Supplier<ActionResult<T> > action, Consumer<T> postAction) {
