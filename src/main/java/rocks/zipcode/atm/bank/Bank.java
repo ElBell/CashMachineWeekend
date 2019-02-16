@@ -62,7 +62,7 @@ public class Bank {
         return accounts.keySet();
     }
 
-    public static int getNumberOfAccounts() {
+    public int getNumberOfAccounts() {
         return numberOfAccounts;
     }
 }

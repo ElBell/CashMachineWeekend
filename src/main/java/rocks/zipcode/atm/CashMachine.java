@@ -65,15 +65,19 @@ public class CashMachine {
     }
 
     public String getAccountID() {
-        return accountData != null ? Integer.toString(accountData.getId()) : "Please select account";
+        return accountData != null ? Integer.toString(accountData.getId()) : "";
     }
 
     public String getAccountEmail() {
-        return accountData != null ? accountData.getEmail() : "Please select account";
+        return accountData != null ? accountData.getEmail() : "";
     }
 
     public float getAccountBalance() {
         return accountData != null ? accountData.getBalance() : 0f;
+    }
+
+    public boolean hasAccount(int account) {
+        return bank.getAccountIds().contains(account);
     }
 
 

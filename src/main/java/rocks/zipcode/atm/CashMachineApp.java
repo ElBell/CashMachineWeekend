@@ -18,9 +18,7 @@ import javafx.stage.Stage;
 
 import java.io.FileInputStream;
 import java.nio.BufferUnderflowException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * @author ZipCodeWilmington
@@ -29,109 +27,49 @@ public class CashMachineApp extends Application {
 
     private TextField moneyField = new TextField();
     private CashMachine cashMachine = new CashMachine(new Bank());
-    private Queue<String> balanceHistory = new LinkedList<String>();
-    //private StringBuilder balanceHistory = new StringBuilder();
+    private Deque<String> balanceHistory = new ArrayDeque<String>();
     private Label idLabel;
     private Label nameLabel;
     private Label emailLabel;
     private Label balanceLabel;
+    private Label messageLabel;
     private Text balanceHistoryArea = new Text();
     private Text messageArea = new Text();
     private TextField newAccountField = new TextField();
     private MenuButton menuButton = new MenuButton();
     private Button btnWithdraw;
     private Button btnDeposit;
+    private TextField idField;
+
+    public void enableAll() {
+        idLabel.setText("ID : " + cashMachine.getAccountID());
+        nameLabel.setText("Name : " + cashMachine.getAccountName());
+        emailLabel.setText("Email : " + cashMachine.getAccountEmail());
+        balanceLabel.setText("Balance : " + String.format("%.2f", cashMachine.getAccountBalance()));
+        balanceHistoryArea.setText("");
+        balanceHistory.clear();
+
+
+        btnDeposit.setDisable(false);
+        btnWithdraw.setDisable(false);
+        moneyField.setVisible(true);
+        messageLabel.setVisible(true);
+
+    }
 
     public void makeMenuItem(Integer account) {
         MenuItem newItem = new MenuItem(Integer.toString(account));
         newItem.setOnAction( event -> {
             cashMachine.login(account);
-
-            idLabel.setText("ID : " + cashMachine.getAccountID());
-            nameLabel.setText("Name : " + cashMachine.getAccountName());
-            emailLabel.setText("Email : " + cashMachine.getAccountEmail());
-            balanceLabel.setText("Balance : " + String.format("%.2f", cashMachine.getAccountBalance()));
-            balanceHistoryArea.setText(balanceHistory.toString());
-
-            btnDeposit.setDisable(false);
-            btnWithdraw.setDisable(false);
+            enableAll();
         });
         menuButton.getItems().add(newItem);
     }
 
-//    private Parent createContent() {
-//        VBox vbox = new VBox(10);
-//        vbox.setPrefSize(600, 580);
-//
-//        TextArea moneyArea = new TextArea();
-///*
-//        //Creating the menu
-//        menuButton = new MenuButton("Select Account", null);
-//
-//        for(Integer account: cashMachine.bank.getAccountIds()) {
-//            makeMenuItem(account);
-//        }
-////
-////        menuItem3.setOnAction(event -> {
-////            System.out.println("Option 3 selected via Lambda");
-////        });
-//
-//        HBox hbox = new HBox(menuButton);
-//
-//
-//        Button btnAddAccount = new Button("Make New Account");
-//        btnAddAccount.setOnAction(e -> {
-//            idArea.setText("ID : " + cashMachine.getAccountID());
-//            cashMachine.bank.addAccount("Trial", "email", 100, false);
-//            makeMenuItem(cashMachine.bank.getNumberOfAccounts());
-//        });
-//
-//        Button btnDeposit = new Button("Deposit");
-//        btnDeposit.setOnAction(e -> {
-//            float amount = Float.parseFloat(field.getText());
-//            StringBuilder lastAction = new StringBuilder(String.format("    %-20.2f  +  %-7.2f %n", cashMachine.getAccountBalance(), amount));
-//            balanceHistory = lastAction.append(balanceHistory);
-//            balanceHistoryArea.setText("Previous Withdraws and Deposits \n" + balanceHistory.toString());
-//            cashMachine.deposit(amount);
-//
-//            balanceArea.setText("Balance : " + cashMachine.getAccountBalance());
-//        });
-//
-//        Button btnWithdraw = new Button("Withdraw");
-//        btnWithdraw.setOnAction(e -> {
-//            float amount = Float.parseFloat(field.getText());
-//            StringBuilder lastAction = new StringBuilder(String.format("    %-20.2f  -  %7.2f %n", cashMachine.getAccountBalance(), amount));
-//            balanceHistory = lastAction.append(balanceHistory);
-//            balanceHistoryArea.setText("Previous Withdraws and Deposits \n" + balanceHistory.toString());
-//            cashMachine.withdraw(amount);
-//
-//            balanceArea.setText("Balance : " + cashMachine.getAccountBalance());
-//        });
-//*/
-////        Button btnExit = new Button("Exit");
-////        btnExit.setOnAction(e -> {
-////            cashMachine.exit();
-////
-////            areaInfo.setText(cashMachine.toString());
-////        });
-//
-//        FlowPane flowpane1 = new FlowPane();
-//
-//        flowpane1.getChildren().add(btnAddAccount);
-//        flowpane1.getChildren().add(menuButton);
-//
-//        FlowPane flowpane2 = new FlowPane();
-//        flowpane2.getChildren().add(btnDeposit);
-//        flowpane2.getChildren().add(btnWithdraw);
-//        //flowpane.getChildren().add(btnExit);
-//        vbox.getChildren().addAll(flowpane1, newAccountField, hbox, idArea, nameArea, emailArea, messageArea, flowpane2, field, balanceArea, balanceHistoryArea);
-//        return vbox;
-//    }
-
     private String manageHistory(String lastAction) {
-        balanceHistory.add(lastAction);
-        if(balanceHistory.size() > 12) {
-            balanceHistory.remove();
+        balanceHistory.offerFirst(lastAction);
+        if(balanceHistory.size() > 10) {
+            balanceHistory.removeLast();
         }
         String result = String.join("\n", balanceHistory);
         return result;
@@ -142,9 +80,9 @@ public class CashMachineApp extends Application {
         idLabel = new Label("ID : " + cashMachine.getAccountID());
         nameLabel = new Label("Name : " + cashMachine.getAccountName());
         emailLabel = new Label("Email : " + cashMachine.getAccountEmail());
-        balanceLabel = new Label("Balance : " + cashMachine.getAccountBalance());
-        Label messageLabel = new Label("Please enter amount:");
-        Label historyLabel = new Label("Previous Withdraws and Deposits");
+        balanceLabel = new Label(String.format("Balance : %.2f", cashMachine.getAccountBalance()));
+        messageLabel = new Label("Please enter amount:");
+        Label historyLabel = new Label("Recent Withdraws and Deposits");
 
         //Creating the menu
         menuButton = new MenuButton("Select Account", null);
@@ -160,6 +98,18 @@ public class CashMachineApp extends Application {
             makeMenuItem(cashMachine.bank.getNumberOfAccounts());
         });
 
+        Button selectIdButton = new Button("Get Acount by ID:");
+        selectIdButton.setOnAction(e -> {
+            int attemptedAccount = Integer.valueOf(idField.getText());
+            if (cashMachine.hasAccount(attemptedAccount)) {
+                cashMachine.login(Integer.valueOf(idField.getText()));
+                idField.clear();
+                enableAll();
+            } else {
+                idField.setText("Not a registered account");
+            }
+        });
+
         btnDeposit = new Button("Deposit");
         btnDeposit.setDisable(true);
         btnDeposit.setOnAction(e -> {
@@ -168,7 +118,7 @@ public class CashMachineApp extends Application {
             balanceHistoryArea.setText(manageHistory(lastAction.toString()));
             cashMachine.deposit(amount);
 
-            balanceLabel.setText("Balance : " + cashMachine.getAccountBalance());
+            balanceLabel.setText(String.format("Balance : %.2f", cashMachine.getAccountBalance()));
         });
 
 
@@ -180,41 +130,46 @@ public class CashMachineApp extends Application {
             balanceHistoryArea.setText(manageHistory(lastAction.toString()));
             cashMachine.withdraw(amount);
 
-            balanceLabel.setText("Balance : " + cashMachine.getAccountBalance());
+            balanceLabel.setText(String.format("Balance : %.2f" , cashMachine.getAccountBalance()));
         });
 
 
         moneyField = new TextField();
+        idField = new TextField();
 
-        headerLabel.setFont(Font.font("Courier", FontWeight.BOLD, 21));
+        headerLabel.setFont(Font.font("Arial", FontWeight.BOLD, 21));
         gridPane.add(headerLabel, 0,0,2,1);
         GridPane.setHalignment(headerLabel, HPos.CENTER);
         GridPane.setMargin(headerLabel, new Insets(5, 5,5,5));
 
         gridPane.add(btnAddAccount, 1, 1);
         gridPane.add(menuButton, 0, 1);
+        gridPane.add(selectIdButton, 0, 2);
+        gridPane.add(idField, 1, 2);
 
         idLabel.setFont(Font.font("Arial", FontWeight.BLACK, 14));
-        gridPane.add(idLabel, 0,2, 2, 1);
+        gridPane.add(idLabel, 0,3, 2, 1);
         GridPane.setHalignment(idLabel, HPos.CENTER);
-        gridPane.add(nameLabel, 0,3, 2, 1);
+        gridPane.add(nameLabel, 0,4, 2, 1);
         GridPane.setHalignment(nameLabel, HPos.CENTER);
-        gridPane.add(emailLabel, 0,4, 2, 1);
+        gridPane.add(emailLabel, 0,5, 2, 1);
         GridPane.setHalignment(emailLabel, HPos.CENTER);
 
-        gridPane.add(btnDeposit, 0, 5);
-        gridPane.add(btnWithdraw, 1, 5);
+        gridPane.add(btnDeposit, 0, 6);
+        gridPane.add(btnWithdraw, 1, 6);
 
-        gridPane.add(messageLabel, 0, 6);
+        gridPane.add(messageLabel, 0, 7);
+        messageLabel.setVisible(false);
         moneyField.setPrefSize(100, 40);
-        gridPane.add(moneyField, 1, 6);
+        moneyField.setVisible(false);
+        gridPane.add(moneyField, 1, 7);
 
         balanceLabel.setFont(Font.font("Courier", FontWeight.BOLD, 16));
-        gridPane.add(balanceLabel, 0,7,2,1);
+        gridPane.add(balanceLabel, 0,8,2,1);
         GridPane.setHalignment(balanceLabel, HPos.CENTER);
 
-        gridPane.add(historyLabel, 0, 8, 2, 1);
-        gridPane.add(balanceHistoryArea, 0, 9, 2, 7);
+        gridPane.add(historyLabel, 0, 9, 2, 1);
+        gridPane.add(balanceHistoryArea, 0, 10, 2, 7);
         GridPane.setHalignment(balanceHistoryArea, HPos.CENTER);
 
 
